@@ -1,3 +1,6 @@
+import collections
+import copy
+
 class Munkres:
     def __init__(self, costs):
         self.costs = costs
@@ -23,7 +26,6 @@ class Munkres:
         i = 0
         for row in self.costs:
             rowMin = min(row)
-            print(rowMin)
 
             for j in range(len(row)):
                 if(self.costs[i][j] != 0):
@@ -42,36 +44,44 @@ class Munkres:
                     self.costs[j][i] -= colMin
 
     def coverZeros(self):
-        xZeroCount = []
-        yZeroCount = []
-        for _ in self.costs:
-            xZeroCount.append(0)
-            yZeroCount.append(0)
+        coveredX = []
+        coveredY = []
 
-        for i, row in enumerate(self.costs):
-            for j, item in enumerate(row):
-                if(item == 0):
-                    xZeroCount[j] += 1
-                    yZeroCount[i] += 1
+        maxZeros = len(self.costs)
 
-        while(max(xZeroCount) + max(yZeroCount)):
-            xMax = [0, 0]
-            yMax = [0, 0]
-            
-            for i, item in enumerate(xZeroCount):
-                if(item > xMax[0]):
-                    xMax[0] = item
-                    xMax[1] = i
+        tempCosts = copy.deepcopy(self.costs)
+        
+        while(maxZeros):
+            for i, row in enumerate(tempCosts):
+                if(collections.Counter(row)[0] == maxZeros):
+                    coveredY.append(i)
+                    for j in range(len(row)):
+                        tempCosts[i][j] += 1
 
-            for i, item in enumerate(xZeroCount):
-                if(item > yMax[0]):
-                    yMax[0] = item
-                    yMax[1] = i
+            for i in range(len(tempCosts)):
+                col = []
+                for j in range(len(tempCosts)):
+                    col.append(tempCosts[j][i])
+                if(collections.Counter(col)[0] == maxZeros):
+                    coveredX.append(i)
+                    for j in range(len(tempCosts)):
+                        tempCosts[j][i] += 1
 
-            if(xMax[0] >= yMax[0]):
-                pass
-            else:
-                pass
+            maxZeros -= 1
+
+        return coveredX, coveredY
+
+    def getMatrixMin(self):
+        rowMins = []
+        for row in self.costs:
+            for item in row:
+                if(item != 0):
+                    rowMins.append(item)
+
+        return min(rowMins)
+
+    # def calculate(self):
+    #     while(self.coverZeros()):
 
 
     def getCosts(self):
@@ -80,16 +90,20 @@ class Munkres:
 
 def main():
     costs = [
-        [2, 5, 8],
-        [7, 0, 6],
-        [2, 1, 6]
+        [30, 25, 10],
+        [15, 10, 20],
+        [25, 20, 15],
     ]
 
     costs = Munkres(costs)
     costs.fillWithZero()
     costs.subRowMin()
     costs.subColMin()
-    print(costs.getCosts())
-    costs.coverZeros()
+    
+    # print(costs.coverZeros())
 
+    # for row in costs.getCosts():
+    #     print(row)
+
+    print(costs.getMatrixMin())
 main()
