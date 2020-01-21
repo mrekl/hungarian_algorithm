@@ -125,15 +125,3 @@ class Munkres:
                     ret.append(self.costsValues[i][j])
 
         return ret
-
-def main():
-    costs = [
-        [30, 25, 10],
-        [15, 10, 20],
-        [25, 20, 15],
-    ]
-
-    costs = Munkres(costs)
-    print(costs.getMinCostsValues())
-    
-main()
