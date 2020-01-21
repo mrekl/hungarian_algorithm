@@ -2,6 +2,10 @@ import collections
 import copy
 
 class Munkres:
+
+    coveredX = []
+    coveredY = []
+
     def __init__(self, costs):
         self.costs = costs
 
@@ -44,17 +48,13 @@ class Munkres:
                     self.costs[j][i] -= colMin
 
     def coverZeros(self):
-        coveredX = []
-        coveredY = []
-
         maxZeros = len(self.costs)
-
         tempCosts = copy.deepcopy(self.costs)
         
         while(maxZeros):
             for i, row in enumerate(tempCosts):
                 if(collections.Counter(row)[0] == maxZeros):
-                    coveredY.append(i)
+                    self.coveredY.append(i)
                     for j in range(len(row)):
                         tempCosts[i][j] += 1
 
@@ -63,13 +63,13 @@ class Munkres:
                 for j in range(len(tempCosts)):
                     col.append(tempCosts[j][i])
                 if(collections.Counter(col)[0] == maxZeros):
-                    coveredX.append(i)
+                    self.coveredX.append(i)
                     for j in range(len(tempCosts)):
                         tempCosts[j][i] += 1
 
             maxZeros -= 1
 
-        return coveredX, coveredY
+        return len(self.coveredX) + len(self.coveredY)
 
     def getMatrixMin(self):
         rowMins = []
@@ -80,9 +80,25 @@ class Munkres:
 
         return min(rowMins)
 
-    # def calculate(self):
-    #     while(self.coverZeros()):
+    def subFromUncovered(self, value):
+        for i, row in enumerate(self.costs):
+            if(self.isContain(self.coveredY, i) == 0):
+                for j in range(len(row)):
+                    if(self.isContain(self.coveredX, j) == 0):
+                        self.costs[i][j] -= value
 
+    def addToCovered(self, value):
+        for i, row in enumerate(self.costs):
+            if(self.isContain(self.coveredY, i) == 1):
+                for j in range(len(row)):
+                    if(self.isContain(self.coveredX, j) == 1 and self.costs[i][j] != 0):
+                        self.costs[i][j] += value
+
+    def isContain(self, array, value):
+        for item in array:
+            if(item == value):
+                return 1
+        return 0
 
     def getCosts(self):
         return self.costs
@@ -100,10 +116,15 @@ def main():
     costs.subRowMin()
     costs.subColMin()
     
-    # print(costs.coverZeros())
+    print(costs.coverZeros())
 
-    # for row in costs.getCosts():
-    #     print(row)
+    matrixMin = costs.getMatrixMin()
 
-    print(costs.getMatrixMin())
+    costs.subFromUncovered(matrixMin)
+    costs.addToCovered(matrixMin)
+
+    for row in costs.getCosts():
+        print(row)
+
+    
 main()
