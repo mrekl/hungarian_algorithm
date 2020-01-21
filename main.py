@@ -87,7 +87,7 @@ class Munkres:
                     if(self.isContain(self.coveredX, j) == 0):
                         self.costs[i][j] -= value
 
-    def addToCovered(self, value):
+    def addToCoveredTwice(self, value):
         for i, row in enumerate(self.costs):
             if(self.isContain(self.coveredY, i) == 1):
                 for j in range(len(row)):
@@ -99,6 +99,16 @@ class Munkres:
             if(item == value):
                 return 1
         return 0
+
+    def calculate(self):
+        self.fillWithZero()
+        self.subRowMin()
+        self.subColMin()
+
+        while(self.coverZeros() < len(self.costs)):
+            matrixMin = self.getMatrixMin()
+            self.subFromUncovered(matrixMin)
+            self.addToCoveredTwice(matrixMin)
 
     def getCosts(self):
         return self.costs
@@ -112,16 +122,8 @@ def main():
     ]
 
     costs = Munkres(costs)
-    costs.fillWithZero()
-    costs.subRowMin()
-    costs.subColMin()
-    
-    print(costs.coverZeros())
 
-    matrixMin = costs.getMatrixMin()
-
-    costs.subFromUncovered(matrixMin)
-    costs.addToCovered(matrixMin)
+    costs.calculate()
 
     for row in costs.getCosts():
         print(row)
