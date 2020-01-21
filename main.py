@@ -8,6 +8,7 @@ class Munkres:
 
     def __init__(self, costs):
         self.costs = costs
+        self.costsValues = copy.deepcopy(self.costs)
 
     def fillWithZero(self):
         maxXLength = 0
@@ -110,9 +111,20 @@ class Munkres:
             self.subFromUncovered(matrixMin)
             self.addToCoveredTwice(matrixMin)
 
-    def getCosts(self):
-        return self.costs
+    def getMinCostsValues(self):
 
+        self.calculate()
+
+        used = []
+        ret = []
+
+        for i, row in enumerate(self.costs):
+            for j, item in enumerate(row):
+                if(item == 0 and self.isContain(used, j) == 0):
+                    used.append(j)
+                    ret.append(self.costsValues[i][j])
+
+        return ret
 
 def main():
     costs = [
@@ -122,11 +134,6 @@ def main():
     ]
 
     costs = Munkres(costs)
-
-    costs.calculate()
-
-    for row in costs.getCosts():
-        print(row)
-
+    print(costs.getMinCostsValues())
     
 main()
