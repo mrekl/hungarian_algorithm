@@ -125,3 +125,6 @@ class Munkres:
                     ret.append(self.costsValues[i][j])
 
         return ret
+
+    def getCostsSum(self):
+        sum(self.getMinCostsValues())
