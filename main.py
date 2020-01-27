@@ -113,7 +113,7 @@ class Munkres:
 
     def getMinCostsValues(self):
 
-        self.calculate()
+        # self.calculate()
 
         used = []
         ret = []
@@ -126,5 +126,22 @@ class Munkres:
 
         return ret
 
-    def getCostsSum(self):
-        sum(self.getMinCostsValues())
+    def getSumOfMinCosts(self):
+        sum = 0
+        for value in self.getMinCostsValues():
+            sum += value
+
+        return sum
+
+def main():
+    costs = [
+        [30, 25, 10],
+        [15, 10, 20],
+        [25, 20, 15],
+    ]
+
+    costs = Munkres(costs)
+    costs.calculate()
+    print(costs.getSumOfMinCosts())
+    
+main()
