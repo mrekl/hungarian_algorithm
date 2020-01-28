@@ -102,7 +102,6 @@ class Munkres:
         return 0
 
     def calculate(self):
-        print(self.costs)
         self.fillWithZero()
         self.subRowMin()
         self.subColMin()
@@ -135,7 +134,6 @@ class Munkres:
                         leastIndex = j
 
             for j, item in enumerate(self.costs[leastIndex]):
-                print(leastIndex, end = ', ')
                 if(item == 0 and self.isContain(used, j) == 0):
                     used.append(j)
                     ret.append(self.costsValues[leastIndex][j])
