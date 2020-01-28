@@ -102,6 +102,7 @@ class Munkres:
         return 0
 
     def calculate(self):
+        print(self.costs)
         self.fillWithZero()
         self.subRowMin()
         self.subColMin()
@@ -113,16 +114,34 @@ class Munkres:
 
     def getMinCostsValues(self):
 
-        # self.calculate()
-
         used = []
+        usedIndexes = []
         ret = []
 
-        for i, row in enumerate(self.costs):
-            for j, item in enumerate(row):
+        for _ in range(len(self.costs)):
+            
+            leastZeros = len(self.costs[0])
+            leastIndex = 0
+            for j, row in enumerate(self.costs):
+
+                if(self.isContain(usedIndexes, j) == 0):
+                    zerosCount = 0
+                    for item in row:
+                        if(item == 0):
+                            zerosCount += 1
+
+                    if(zerosCount < leastZeros):
+                        leastZeros = zerosCount
+                        leastIndex = j
+
+            for j, item in enumerate(self.costs[leastIndex]):
+                print(leastIndex, end = ', ')
                 if(item == 0 and self.isContain(used, j) == 0):
                     used.append(j)
-                    ret.append(self.costsValues[i][j])
+                    ret.append(self.costsValues[leastIndex][j])
+
+            usedIndexes.append(leastIndex)
+            
 
         return ret
 
@@ -133,15 +152,19 @@ class Munkres:
 
         return sum
 
-def main():
-    costs = [
-        [30, 25, 10],
-        [15, 10, 20],
-        [25, 20, 15],
-    ]
 
-    costs = Munkres(costs)
-    costs.calculate()
-    print(costs.getSumOfMinCosts())
-    
-main()
+costs = [
+    [13, 54, 76],
+    [12, 34, 87],
+    [23, 7, 65],
+]
+
+costs = Munkres(costs)
+costs.calculate()
+print(costs.getSumOfMinCosts())
+
+# costs = [
+#         [30, 25, 10],
+#         [15, 10, 20],
+#         [25, 20, 15],
+#     ]
