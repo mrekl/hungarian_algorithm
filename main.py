@@ -139,13 +139,13 @@ class Munkres:
                     ret.append(self.costsValues[leastIndex][j])
 
             usedIndexes.append(leastIndex)
-            
 
         return ret
 
-    def getSumOfMinCosts(self):
+    def getResult(self):
+        minValues = self.getMinCostsValues()
         sum = 0
-        for value in self.getMinCostsValues():
+        for value in minValues:
             sum += value
 
-        return sum
+        return sum, minValues
