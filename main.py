@@ -151,20 +151,3 @@ class Munkres:
             sum += value
 
         return sum
-
-
-costs = [
-    [13, 54, 76],
-    [12, 34, 87],
-    [23, 7, 65],
-]
-
-costs = Munkres(costs)
-costs.calculate()
-print(costs.getSumOfMinCosts())
-
-# costs = [
-#         [30, 25, 10],
-#         [15, 10, 20],
-#         [25, 20, 15],
-#     ]
